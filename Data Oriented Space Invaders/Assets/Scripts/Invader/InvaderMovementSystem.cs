@@ -1,11 +1,16 @@
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Transforms;
+using Unity.Transforms; 
 
 public partial struct InvaderMovementSystem : ISystem
 {
-    public void OnCreate(ref SystemState state) { }
+    private int _dir;
+    
+    public void OnCreate(ref SystemState state)
+    {
+        _dir = 1;
+    }
 
     public void OnDestroy(ref SystemState state) { }
 
@@ -22,15 +27,23 @@ public partial struct InvaderMovementSystem : ISystem
             ProcessInvaderMovement(transform, entity, dt);
         }
     }
-
     private void ProcessInvaderMovement(RefRW<LocalTransform> transform, Entity entity, float dt)
     {
         var pos = transform.ValueRO.Position;
+
+        // When the horizontal position exceeds a certain value, head in the opposite direction
+        if (pos.x <= -10f)
+        {
+            _dir = 1;
+        }
+        else if (pos.x >= 10f)
+        {
+            _dir = -1;
+        }
         
-        pos.y = (float)entity.Index;
+        var dir = new float3(1f * _dir, 0f, 0f);
+        var velocity = 5.0f * dir;
 
-        var dir = new float3(1f, 0f, 0f);
-
-        transform.ValueRW.Position += dir * dt * 5.0f;
+        transform.ValueRW.Position += velocity * dt;
     }
 }

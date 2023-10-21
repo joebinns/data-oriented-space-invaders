@@ -1,18 +1,18 @@
 using UnityEngine;
 using Unity.Entities;
 
-class SpawnerAuthoring : MonoBehaviour
+class ProjectileSpawnerAuthoring : MonoBehaviour
 {
     public GameObject Prefab;
     public float SpawnRate;
 }
 
-class SpawnerBaker : Baker<SpawnerAuthoring>
+class SpawnerBaker : Baker<ProjectileSpawnerAuthoring>
 {
-    public override void Bake(SpawnerAuthoring authoring)
+    public override void Bake(ProjectileSpawnerAuthoring authoring)
     {
         var entity = GetEntity(TransformUsageFlags.None);
-        AddComponent(entity, new Spawner
+        AddComponent(entity, new ProjectileSpawner
         {
             // By default, each authoring GameObject turns into an Entity.
             // Given a GameObject (or authoring component), GetEntity looks up the resulting Entity.

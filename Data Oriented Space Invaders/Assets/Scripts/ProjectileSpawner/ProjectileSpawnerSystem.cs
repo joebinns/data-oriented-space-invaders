@@ -3,7 +3,7 @@ using Unity.Transforms;
 using Unity.Burst;
 
 [BurstCompile]
-public partial struct SpawnerSystem : ISystem
+public partial struct ProjectileSpawnerSystem : ISystem
 {
     public void OnCreate(ref SystemState state) { }
 
@@ -15,13 +15,13 @@ public partial struct SpawnerSystem : ISystem
         // Queries for all Spawner components. Uses RefRW because this system wants
         // to read from and write to the component. If the system only needed read-only
         // access, it would use RefRO instead.
-        foreach (RefRW<Spawner> spawner in SystemAPI.Query<RefRW<Spawner>>())
+        foreach (RefRW<ProjectileSpawner> projectileSpawner in SystemAPI.Query<RefRW<ProjectileSpawner>>())
         {
-            ProcessSpawner(ref state, spawner);
+            ProcessSpawner(ref state, projectileSpawner);
         }
     }
 
-    private void ProcessSpawner(ref SystemState state, RefRW<Spawner> spawner)
+    private void ProcessSpawner(ref SystemState state, RefRW<ProjectileSpawner> spawner)
     {
         // If the next spawn time has passed.
         if (spawner.ValueRO.NextSpawnTime < SystemAPI.Time.ElapsedTime)

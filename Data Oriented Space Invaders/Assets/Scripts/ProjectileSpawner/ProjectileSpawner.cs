@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-public struct Spawner : IComponentData
+public struct ProjectileSpawner : IComponentData
 {
     public Entity Prefab;
     public float3 SpawnPosition;

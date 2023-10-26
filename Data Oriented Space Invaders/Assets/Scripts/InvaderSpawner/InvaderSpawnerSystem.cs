@@ -13,7 +13,7 @@ public partial struct InvaderSpawnerSystem : ISystem
     [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
-        state.RequireForUpdate<Execute.InvaderSpawning>();
+        //state.RequireForUpdate<Execute.InvaderSpawner>(); // Not sure what this is supposed to do
         state.RequireForUpdate<InvaderSpawner>();
     }
 
@@ -33,8 +33,21 @@ public partial struct InvaderSpawnerSystem : ISystem
         var queryMask = query.GetEntityQueryMask();
 
         var ecb = new EntityCommandBuffer(Allocator.Temp);
-        var tanks = new NativeArray<Entity>(invaderSpawner.Count, Allocator.Temp);
-        ecb.Instantiate(invaderSpawner.Prefab, tanks);
+        var invaders = new NativeArray<Entity>(invaderSpawner.Count, Allocator.Temp);
+        ecb.Instantiate(invaderSpawner.Prefab, invaders);
+        
+        // Set positions
+        var spawnDistance = 2f;
+        var spawnVertical = 10f;
+        
+        var spawnHorizontal = (spawnDistance / 2f) * (1f - invaders.Length);
+        foreach (var invader in invaders)
+        {
+            // Every root entity instantiated from a prefab has a LinkedEntityGroup component, which
+            // is a list of all the entities that make up the prefab hierarchy.
+            ecb.ReplaceComponentForLinkedEntityGroup(invader, LocalTransform.FromPosition(new float3(spawnHorizontal, spawnVertical, 0f)));
+            spawnHorizontal += spawnDistance;
+        }
 
         ecb.Playback(state.EntityManager);
     }

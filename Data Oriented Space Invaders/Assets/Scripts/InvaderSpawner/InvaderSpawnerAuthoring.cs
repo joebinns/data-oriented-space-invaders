@@ -5,7 +5,6 @@ class InvaderSpawnerAuthoring : MonoBehaviour
 {
     public GameObject Prefab;
     public int Count;
-    public float SafeZoneRadius;
 }
 
 class InvaderSpawnerBaker : Baker<InvaderSpawnerAuthoring>
@@ -17,7 +16,6 @@ class InvaderSpawnerBaker : Baker<InvaderSpawnerAuthoring>
         {
             Prefab = GetEntity(authoring.Prefab, TransformUsageFlags.Dynamic),
             Count = authoring.Count,
-            SafeZoneRadius = authoring.SafeZoneRadius
         });
     }
 }

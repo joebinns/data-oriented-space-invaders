@@ -35,7 +35,7 @@ public partial struct ProjectileSpawnerSystem : ISystem
                 SystemAPI.GetComponent<LocalTransform>(spawner.ValueRO.SpawnTransform).Position
             ));
 
-                // Resets the next spawn time.
+            // Resets the next spawn time.
             spawner.ValueRW.NextSpawnTime = (float)SystemAPI.Time.ElapsedTime + spawner.ValueRO.SpawnRate;
         }
     }

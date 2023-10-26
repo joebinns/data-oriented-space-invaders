@@ -1,38 +1,41 @@
+using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
-using Unity.Burst;
+using Unity.Mathematics;
+using Unity.Rendering;
+using UnityEngine;
+using Random = Unity.Mathematics.Random;
 
 [BurstCompile]
 public partial struct InvaderSpawnerSystem : ISystem
 {
-    public void OnCreate(ref SystemState state) { }
-
-    public void OnDestroy(ref SystemState state) { }
+    [BurstCompile]
+    public void OnCreate(ref SystemState state)
+    {
+        state.RequireForUpdate<Execute.InvaderSpawning>();
+        state.RequireForUpdate<InvaderSpawner>();
+    }
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        // Queries for all Spawner components. Uses RefRW because this system wants
-        // to read from and write to the component. If the system only needed read-only
-        // access, it would use RefRO instead.
-        foreach (RefRW<InvaderSpawner> invaderSpawner in SystemAPI.Query<RefRW<InvaderSpawner>>())
-        {
-            ProcessSpawner(ref state, invaderSpawner);
-        }
-    }
+        state.Enabled = false; // Only run update once
 
-    private void ProcessSpawner(ref SystemState state, RefRW<InvaderSpawner> spawner)
-    {
-        // If the next spawn time has passed.
-        if (spawner.ValueRO.NextSpawnTime < SystemAPI.Time.ElapsedTime)
-        {
-            // Spawns a new entity and positions it at the spawner.
-            Entity newEntity = state.EntityManager.Instantiate(spawner.ValueRO.Prefab);
-            // LocalPosition.FromPosition returns a Transform initialized with the given position.
-            state.EntityManager.SetComponentData(newEntity, LocalTransform.FromPosition(spawner.ValueRO.SpawnPosition));
+        var invaderSpawner = SystemAPI.GetSingleton<InvaderSpawner>();
+        // This system will only run once, so the random seed can be hard-coded.
+        // Using an arbitrary constant seed makes the behavior deterministic.
+        var random = new Random(123);
 
-            // Resets the next spawn time.
-            spawner.ValueRW.NextSpawnTime = (float)SystemAPI.Time.ElapsedTime + spawner.ValueRO.SpawnRate;
-        }
+        var query = SystemAPI.QueryBuilder().WithAll<URPMaterialPropertyBaseColor>().Build();
+        // An EntityQueryMask provides an efficient test of whether a specific entity would
+        // be selected by an EntityQuery.
+        var queryMask = query.GetEntityQueryMask();
+
+        var ecb = new EntityCommandBuffer(Allocator.Temp);
+        var tanks = new NativeArray<Entity>(invaderSpawner.Count, Allocator.Temp);
+        ecb.Instantiate(invaderSpawner.Prefab, tanks);
+
+        ecb.Playback(state.EntityManager);
     }
 }

@@ -1,8 +1,10 @@
 using Unity.Entities;
 using Unity.Transforms;
 using Unity.Burst;
+using Unity.Mathematics;
+using Unity.Rendering;
 
-[BurstCompile]
+[UpdateInGroup(typeof(LateSimulationSystemGroup))]
 public partial struct ProjectileSpawnerSystem : ISystem
 {
     public void OnCreate(ref SystemState state) { }
@@ -26,12 +28,14 @@ public partial struct ProjectileSpawnerSystem : ISystem
         // If the next spawn time has passed.
         if (spawner.ValueRO.NextSpawnTime < SystemAPI.Time.ElapsedTime)
         {
-            // Spawns a new entity and positions it at the spawner.
-            Entity newEntity = state.EntityManager.Instantiate(spawner.ValueRO.Prefab);
-            // LocalPosition.FromPosition returns a Transform initialized with the given position.
-            state.EntityManager.SetComponentData(newEntity, LocalTransform.FromPosition(spawner.ValueRO.SpawnPosition));
+            Entity projectile = state.EntityManager.Instantiate(spawner.ValueRO.Prefab);
 
-            // Resets the next spawn time.
+            state.EntityManager.SetComponentData(projectile, LocalTransform.FromPosition
+            (
+                SystemAPI.GetComponent<LocalTransform>(spawner.ValueRO.SpawnTransform).Position
+            ));
+
+                // Resets the next spawn time.
             spawner.ValueRW.NextSpawnTime = (float)SystemAPI.Time.ElapsedTime + spawner.ValueRO.SpawnRate;
         }
     }

@@ -4,6 +4,7 @@ using Unity.Entities;
 class ProjectileSpawnerAuthoring : MonoBehaviour
 {
     public GameObject Prefab;
+    public Transform SpawnTransform;
     public float SpawnRate;
 }
 
@@ -17,7 +18,7 @@ class SpawnerBaker : Baker<ProjectileSpawnerAuthoring>
             // By default, each authoring GameObject turns into an Entity.
             // Given a GameObject (or authoring component), GetEntity looks up the resulting Entity.
             Prefab = GetEntity(authoring.Prefab, TransformUsageFlags.Dynamic),
-            SpawnPosition = authoring.transform.position,
+            SpawnTransform = GetEntity(authoring.SpawnTransform, TransformUsageFlags.Dynamic),
             NextSpawnTime = 0.0f,
             SpawnRate = authoring.SpawnRate
         });

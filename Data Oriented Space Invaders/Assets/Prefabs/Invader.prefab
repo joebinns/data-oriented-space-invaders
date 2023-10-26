@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 4259504464743242846, guid: fbcfaadf6620db647b67a566abafc279, type: 3}
+  SpawnTransform: {fileID: 703773011610329593}
   SpawnRate: 5
 --- !u!1 &8632299593342681401
 GameObject:

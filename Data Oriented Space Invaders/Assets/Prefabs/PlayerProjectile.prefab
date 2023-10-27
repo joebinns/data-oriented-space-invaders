@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 9142529313049516910}
   - component: {fileID: 4154379636973243667}
   m_Layer: 0
-  m_Name: Projectile
+  m_Name: PlayerProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -118,4 +118,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 838a6fb716f0448ca441094661c8682a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Velocity: {x: 0, y: 0, z: 0}
+  Velocity: {x: 0, y: 6, z: 0}

@@ -36,7 +36,7 @@ public partial struct PlayerMovementSystem : ISystem
         var velocity = speed * new float3(1f, 0f, 0f);
         var deltaPosition = velocity * Time.deltaTime;
         var newPosition = transform.ValueRO.Position + deltaPosition;
-        newPosition.x = Mathf.Clamp(newPosition.x, -GameSettings.Instance.Width, GameSettings.Instance.Width);
+        newPosition.x = Mathf.Clamp(newPosition.x, -10f, 10f);
         transform.ValueRW.Position = newPosition;
     }
 }

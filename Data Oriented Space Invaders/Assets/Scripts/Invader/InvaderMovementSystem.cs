@@ -32,11 +32,11 @@ public partial struct InvaderMovementSystem : ISystem
         var pos = transform.ValueRO.Position;
 
         // When the horizontal position exceeds a certain value, head in the opposite direction
-        if (pos.x <= -GameSettings.Instance.Width)
+        if (pos.x <= -10f) // invader.ValueRO.Width
         {
             _dir = 1;
         }
-        else if (pos.x >= GameSettings.Instance.Width)
+        else if (pos.x >= 10f)
         {
             _dir = -1;
         }

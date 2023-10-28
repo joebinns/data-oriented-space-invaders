@@ -3,5 +3,6 @@ using Unity.Mathematics;
 
 public struct Projectile : IComponentData
 {
-    public float3 Velocity;
+    public float VerticalVelocity;
+    public float DistanceTravelled;
 }

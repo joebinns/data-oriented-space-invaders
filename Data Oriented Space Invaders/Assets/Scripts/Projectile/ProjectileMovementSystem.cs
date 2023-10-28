@@ -1,5 +1,7 @@
+using System;
 using Unity.Entities;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Transforms;
 
@@ -15,17 +17,28 @@ public partial struct ProjectileMovementSystem : ISystem
     {
         var dt = SystemAPI.Time.DeltaTime;
 
-        foreach (var (transform, projectile) in
+        var ecb = new EntityCommandBuffer(Allocator.Temp);
+        
+        foreach (var (transform, projectile, entity) in
                  SystemAPI.Query<RefRW<LocalTransform>,
-                     RefRO<Projectile>>())
+                     RefRW<Projectile>>().WithEntityAccess())
         {
-            ProcessProjectileMovement(transform, projectile, dt);
+            var deltaDisplacement = ProcessProjectileMovement(transform, projectile, dt);
+            
+            projectile.ValueRW.DistanceTravelled += Math.Abs(deltaDisplacement);
+            if (projectile.ValueRO.DistanceTravelled > 12f)
+            {
+                ecb.DestroyEntity(entity);
+            }
         }
+        
+        ecb.Playback(state.EntityManager);
     }
-    private void ProcessProjectileMovement(RefRW<LocalTransform> transform, RefRO<Projectile> projectile, float dt)
+    private float ProcessProjectileMovement(RefRW<LocalTransform> transform, RefRW<Projectile> projectile, float dt)
     {
-        var velocity = projectile.ValueRO.Velocity;
-
-        transform.ValueRW.Position += velocity * dt;
+        var velocity = projectile.ValueRO.VerticalVelocity;
+        var deltaDisplacement = velocity * dt;
+        transform.ValueRW.Position += deltaDisplacement * new float3(0f, 1f, 0f);
+        return deltaDisplacement;
     }
 }

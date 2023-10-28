@@ -4,7 +4,6 @@ using Unity.Entities;
 using Unity.Transforms;
 using Unity.Mathematics;
 using Unity.Rendering;
-using UnityEngine;
 using Random = Unity.Mathematics.Random;
 
 [BurstCompile]

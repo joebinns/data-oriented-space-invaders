@@ -3,7 +3,7 @@ using Unity.Entities;
 
 class ProjectileAuthoring : MonoBehaviour
 {
-    public Vector3 Velocity;
+    public float VerticalVelocity;
 }
 
 class ProjectileBaker : Baker<ProjectileAuthoring>
@@ -13,7 +13,8 @@ class ProjectileBaker : Baker<ProjectileAuthoring>
         var entity = GetEntity(TransformUsageFlags.None);
         AddComponent(entity, new Projectile
         {
-            Velocity = authoring.Velocity
+            VerticalVelocity = authoring.VerticalVelocity,
+            DistanceTravelled = 0f
         });
     }
 }

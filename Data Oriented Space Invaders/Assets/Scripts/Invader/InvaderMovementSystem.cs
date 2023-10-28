@@ -45,7 +45,5 @@ public partial struct InvaderMovementSystem : ISystem
         var velocity = 5.0f * dir;
 
         transform.ValueRW.Position += velocity * dt;
-        
-        // TODO: Also move the projectile spawner
     }
 }

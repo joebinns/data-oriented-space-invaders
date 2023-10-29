@@ -119,3 +119,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VerticalVelocity: -4
+  DestroyAtDistance: 12

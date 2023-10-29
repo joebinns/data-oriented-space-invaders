@@ -15,8 +15,8 @@ class ProjectileBaker : Baker<ProjectileAuthoring>
         AddComponent(entity, new Projectile
         {
             VerticalVelocity = authoring.VerticalVelocity,
-            DestroyAtDistance = authoring.DestroyAtDistance,
-            DistanceTravelled = 0f
+            DistanceTravelled = 0f,
+            DestroyAtDistance = authoring.DestroyAtDistance
         });
     }
 }

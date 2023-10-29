@@ -19,7 +19,13 @@ public partial struct ProjectileMovementSystem : ISystem
                      RefRW<Projectile>>().WithEntityAccess())
         {
             var deltaVerticalDisplacement = ProcessProjectileMovement(transform, projectile, deltaTime);
-            UpdateEntityLife(ref entityCommandBuffer, entity, projectile, deltaVerticalDisplacement);
+
+            // Destroy entities that have left the arena
+            projectile.ValueRW.DistanceTravelled += Math.Abs(deltaVerticalDisplacement);
+            if (projectile.ValueRO.DistanceTravelled > projectile.ValueRO.DestroyAtDistance)
+            {
+                entityCommandBuffer.DestroyEntity(entity);
+            }
         }
         
         entityCommandBuffer.Playback(state.EntityManager);
@@ -31,15 +37,5 @@ public partial struct ProjectileMovementSystem : ISystem
         var deltaVerticalDisplacement = projectile.ValueRO.VerticalVelocity * deltaTime;
         transform.ValueRW.Position += deltaVerticalDisplacement * new float3(0f, 1f, 0f);
         return deltaVerticalDisplacement;
-    }
-
-    [BurstCompile]
-    private void UpdateEntityLife(ref EntityCommandBuffer entityCommandBuffer, Entity entity, RefRW<Projectile> projectile, float deltaVerticalDisplacement)
-    {
-        projectile.ValueRW.DistanceTravelled += Math.Abs(deltaVerticalDisplacement);
-        if (projectile.ValueRO.DistanceTravelled > projectile.ValueRO.DestroyAtDistance)
-        {
-            entityCommandBuffer.DestroyEntity(entity);
-        }
     }
 }

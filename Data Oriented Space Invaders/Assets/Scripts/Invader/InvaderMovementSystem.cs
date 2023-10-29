@@ -2,8 +2,8 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
+[BurstCompile]
 public partial struct InvaderMovementSystem : ISystem
 {
     private int _direction;

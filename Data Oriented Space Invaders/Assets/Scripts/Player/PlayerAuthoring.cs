@@ -3,6 +3,8 @@ using Unity.Entities;
 
 class PlayerAuthoring : MonoBehaviour
 {
+    public float Speed = 4f;
+    public float Width = 20f;
 }
 
 class PlayerBaker : Baker<PlayerAuthoring>
@@ -12,7 +14,8 @@ class PlayerBaker : Baker<PlayerAuthoring>
         var entity = GetEntity(TransformUsageFlags.None);
         AddComponent(entity, new Player
         {
-            
+            Speed = authoring.Speed,
+            Width = authoring.Width
         });
     }
 }

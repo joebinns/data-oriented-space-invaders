@@ -1,7 +1,7 @@
 using Unity.Entities;
-using Unity.Mathematics;
 
 public struct Invader : IComponentData
 {
+    public float Speed;
     public float Width;
 }

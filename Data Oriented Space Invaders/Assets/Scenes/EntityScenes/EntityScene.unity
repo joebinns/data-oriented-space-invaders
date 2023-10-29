@@ -302,7 +302,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 8632299593342681401, guid: 5de31f652539f524daefad458852a3b1, type: 3}
-  Count: 4
+  Count: 8
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

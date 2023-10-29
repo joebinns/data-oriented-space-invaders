@@ -3,12 +3,8 @@ using UnityEngine;
 
 class InvaderAuthoring : MonoBehaviour
 {
-    [HideInInspector] public float Width;
-    
-    private void Awake()
-    {
-        Width = GameSettings.Instance.Width;
-    }
+    public float Speed = 3f;
+    public float Width = 20f;
 }
 
 class InvaderBaker : Baker<InvaderAuthoring>
@@ -18,6 +14,7 @@ class InvaderBaker : Baker<InvaderAuthoring>
         var entity = GetEntity(TransformUsageFlags.Dynamic);
         AddComponent(entity, new Invader
         {
+            Speed = authoring.Speed,
             Width = authoring.Width
         });
     }

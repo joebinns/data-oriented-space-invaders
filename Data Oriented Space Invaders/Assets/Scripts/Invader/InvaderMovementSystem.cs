@@ -5,45 +5,51 @@ using Unity.Transforms;
 
 public partial struct InvaderMovementSystem : ISystem
 {
-    private int _dir;
-    
+    private int _direction;
+
+    [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
-        _dir = 1;
+        _direction = 1;
     }
-
-    public void OnDestroy(ref SystemState state) { }
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        var dt = SystemAPI.Time.DeltaTime;
+        var deltaTime = SystemAPI.Time.DeltaTime;
         
-        foreach (var (transform, entity) in
-                 SystemAPI.Query<RefRW<LocalTransform>>()
-                     .WithAll<Invader>()
-                     .WithEntityAccess())
+        foreach (var (transform, invader) in
+                 SystemAPI.Query<RefRW<LocalTransform>,
+                     RefRW<Invader>>())
         {
-            ProcessInvaderMovement(transform, entity, dt);
+            UpdateInvadersDirection(transform.ValueRO.Position.x, invader.ValueRO.Width);
+            ApplyInvaderMovement(transform, invader.ValueRO.Speed, deltaTime);
         }
     }
-    private void ProcessInvaderMovement(RefRW<LocalTransform> transform, Entity entity, float dt)
+    
+    /// <summary>
+    /// When the horizontal position exceeds a certain value,
+    /// reverse direction of all invaders.
+    /// </summary>
+    [BurstCompile]
+    private void UpdateInvadersDirection(float horizontalPosition, float width)
     {
-        var pos = transform.ValueRO.Position;
-
-        // When the horizontal position exceeds a certain value, head in the opposite direction
-        if (pos.x <= -10f) // invader.ValueRO.Width
+        if (horizontalPosition <= -width/2f)
         {
-            _dir = 1;
+            _direction = 1;
         }
-        else if (pos.x >= 10f)
+        else if (horizontalPosition >= width/2f)
         {
-            _dir = -1;
+            _direction = -1;
         }
-        
-        var dir = new float3(1f * _dir, 0f, 0f);
-        var velocity = 5.0f * dir;
+    }
 
-        transform.ValueRW.Position += velocity * dt;
+    [BurstCompile]
+    private void ApplyInvaderMovement(RefRW<LocalTransform> transform, float speed, float deltaTime)
+    {
+        var direction = new float3(1f * _direction, 0f, 0f);
+        var velocity = speed * direction;
+        var deltaPosition = velocity * deltaTime;
+        transform.ValueRW.Position += deltaPosition;
     }
 }

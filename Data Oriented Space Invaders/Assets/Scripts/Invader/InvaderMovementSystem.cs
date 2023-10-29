@@ -18,7 +18,6 @@ public partial struct InvaderMovementSystem : ISystem
     public void OnUpdate(ref SystemState state)
     {
         var deltaTime = SystemAPI.Time.DeltaTime;
-        
         foreach (var (transform, invader) in
                  SystemAPI.Query<RefRW<LocalTransform>,
                      RefRW<Invader>>())

@@ -3,7 +3,8 @@ using Unity.Entities;
 
 class ProjectileAuthoring : MonoBehaviour
 {
-    public float VerticalVelocity;
+    public float VerticalVelocity = 6f;
+    public float DestroyAtDistance = 12f;
 }
 
 class ProjectileBaker : Baker<ProjectileAuthoring>
@@ -14,6 +15,7 @@ class ProjectileBaker : Baker<ProjectileAuthoring>
         AddComponent(entity, new Projectile
         {
             VerticalVelocity = authoring.VerticalVelocity,
+            DestroyAtDistance = authoring.DestroyAtDistance,
             DistanceTravelled = 0f
         });
     }

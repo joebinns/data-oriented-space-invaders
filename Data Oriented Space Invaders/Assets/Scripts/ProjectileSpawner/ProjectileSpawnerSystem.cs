@@ -20,7 +20,7 @@ public partial struct ProjectileSpawnerSystem : ISystem
     {
         if (!(spawner.ValueRO.NextSpawnTime < SystemAPI.Time.ElapsedTime)) return;
         // Reset the next spawn time
-        spawner.ValueRW.NextSpawnTime = (float)SystemAPI.Time.ElapsedTime + spawner.ValueRO.SpawnRate;
+        spawner.ValueRW.NextSpawnTime = (float)SystemAPI.Time.ElapsedTime + spawner.ValueRO.SpawnPeriod;
         
         // Spawn projectile
         Entity projectile = state.EntityManager.Instantiate(spawner.ValueRO.Prefab);

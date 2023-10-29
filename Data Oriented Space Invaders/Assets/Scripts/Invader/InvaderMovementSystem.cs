@@ -1,7 +1,8 @@
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Transforms; 
+using Unity.Transforms;
+using UnityEngine;
 
 public partial struct InvaderMovementSystem : ISystem
 {
@@ -22,7 +23,7 @@ public partial struct InvaderMovementSystem : ISystem
                  SystemAPI.Query<RefRW<LocalTransform>,
                      RefRW<Invader>>())
         {
-            UpdateInvadersDirection(transform.ValueRO.Position.x, invader.ValueRO.Width);
+            UpdateInvadersDirection(transform, invader.ValueRO.Width);
             ApplyInvaderMovement(transform, invader.ValueRO.Speed, deltaTime);
         }
     }
@@ -32,16 +33,25 @@ public partial struct InvaderMovementSystem : ISystem
     /// reverse direction of all invaders.
     /// </summary>
     [BurstCompile]
-    private void UpdateInvadersDirection(float horizontalPosition, float width)
+    private void UpdateInvadersDirection(RefRW<LocalTransform> transform, float width)
     {
-        if (horizontalPosition <= -width/2f)
+        var directionChanged = false;
+        if (transform.ValueRO.Position.x <= -width/2f)
         {
             _direction = 1;
         }
-        else if (horizontalPosition >= width/2f)
+        else if (transform.ValueRO.Position.x >= width/2f)
         {
             _direction = -1;
+            FixError(transform, width);
         }
+    }
+
+    [BurstCompile]
+    private void FixError(RefRW<LocalTransform> transform, float width)
+    {
+        var error = width/2f - transform.ValueRO.Position.x;
+        transform.ValueRW.Position.x -= error;
     }
 
     [BurstCompile]

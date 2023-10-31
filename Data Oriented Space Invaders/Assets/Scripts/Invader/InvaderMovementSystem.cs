@@ -42,15 +42,7 @@ public partial struct InvaderMovementSystem : ISystem
         else if (transform.ValueRO.Position.x >= width/2f)
         {
             _direction = -1;
-            FixError(transform, width);
         }
-    }
-
-    [BurstCompile]
-    private void FixError(RefRW<LocalTransform> transform, float width)
-    {
-        var error = width/2f - transform.ValueRO.Position.x;
-        transform.ValueRW.Position.x -= error;
     }
 
     [BurstCompile]

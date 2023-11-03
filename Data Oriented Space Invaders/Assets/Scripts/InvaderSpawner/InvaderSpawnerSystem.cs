@@ -5,32 +5,38 @@ using Unity.Transforms;
 using Unity.Mathematics;
 
 [BurstCompile]
+[UpdateInGroup(typeof(LateSimulationSystemGroup))]
 public partial struct InvaderSpawnerSystem : ISystem
 {
     [BurstCompile]
-    public void OnCreate(ref SystemState state)
+    public void OnUpdate(ref SystemState state)
     {
-        state.RequireForUpdate<InvaderSpawner>();
+        foreach (RefRW<InvaderSpawner> invaderSpawner in SystemAPI.Query<RefRW<InvaderSpawner>>())
+        {
+            ProcessSpawner(ref state, invaderSpawner);
+        }
     }
 
     [BurstCompile]
-    public void OnUpdate(ref SystemState state)
+    private void ProcessSpawner(ref SystemState state, RefRW<InvaderSpawner> spawner)
     {
-        state.Enabled = false; // Only run update once
+        if (spawner.ValueRO.NextSpawnTime > SystemAPI.Time.ElapsedTime) return;
+        if (spawner.ValueRO.CurrentWave >= spawner.ValueRO.Waves) return;
 
-        var invaderSpawner = SystemAPI.GetSingleton<InvaderSpawner>();
-        var entityCommandBuffer = new EntityCommandBuffer(Allocator.Temp);
-        var invaders = new NativeArray<Entity>(invaderSpawner.Count, Allocator.Temp);
-        
         // Spawn invaders with a vertical height and horizontal spacing
-        entityCommandBuffer.Instantiate(invaderSpawner.Prefab, invaders);
-        var spawnHorizontal = (invaderSpawner.Spacing / 2f) * (1f - invaders.Length);
-        foreach (var invader in invaders)
+        var spawnHorizontal = (spawner.ValueRO.Spacing / 2f) * (1f - spawner.ValueRO.Count);
+        var spawnVertical = (spawner.ValueRO.Height + spawner.ValueRO.CurrentWave * spawner.ValueRO.Spacing);
+        for (var i = 0; i < spawner.ValueRO.Count; i++)
         {
-            entityCommandBuffer.ReplaceComponentForLinkedEntityGroup(invader, LocalTransform.FromPosition(new float3(spawnHorizontal, invaderSpawner.Height, 0f)));
-            spawnHorizontal += invaderSpawner.Spacing;
+            spawnHorizontal += spawner.ValueRO.Spacing;
+            Entity invader = state.EntityManager.Instantiate(spawner.ValueRO.Prefab);
+            state.EntityManager.SetComponentData(invader,
+                LocalTransform.FromPosition(new float3(spawnHorizontal, spawnVertical, 0f))
+            );
         }
-
-        entityCommandBuffer.Playback(state.EntityManager);
+        
+        // Reset the next spawn time and update the number of remaining waves
+        spawner.ValueRW.NextSpawnTime = (float)SystemAPI.Time.ElapsedTime + spawner.ValueRO.SpawnPeriod;
+        spawner.ValueRW.CurrentWave++;
     }
 }

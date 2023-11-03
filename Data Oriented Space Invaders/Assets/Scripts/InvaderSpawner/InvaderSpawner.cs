@@ -6,4 +6,8 @@ public struct InvaderSpawner : IComponentData
     public int Count;
     public float Spacing;
     public float Height;
+    public float NextSpawnTime;
+    public float SpawnPeriod;
+    public int Waves;
+    public int CurrentWave;
 }

@@ -4,9 +4,11 @@ using Unity.Entities;
 class InvaderSpawnerAuthoring : MonoBehaviour
 {
     public GameObject Prefab;
-    public int Count;
-    public float Spacing;
-    public float Height;
+    public int Count = 6;
+    public float Spacing = 2f;
+    public float Height = 10f;
+    public float SpawnPeriod = 4f;
+    public int Waves = 3;
 }
 
 class InvaderSpawnerBaker : Baker<InvaderSpawnerAuthoring>
@@ -19,7 +21,11 @@ class InvaderSpawnerBaker : Baker<InvaderSpawnerAuthoring>
             Prefab = GetEntity(authoring.Prefab, TransformUsageFlags.Dynamic),
             Count = authoring.Count,
             Spacing = authoring.Spacing,
-            Height = authoring.Height
+            Height = authoring.Height,
+            NextSpawnTime = 0.0f,
+            SpawnPeriod = authoring.SpawnPeriod,
+            Waves = authoring.Waves,
+            CurrentWave = 0
         });
     }
 }

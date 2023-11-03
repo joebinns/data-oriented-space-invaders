@@ -307,6 +307,8 @@ MonoBehaviour:
   Count: 6
   Spacing: 2
   Height: 10
+  SpawnPeriod: 2
+  Waves: 4
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

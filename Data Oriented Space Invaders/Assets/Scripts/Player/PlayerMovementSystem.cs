@@ -4,10 +4,8 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-[BurstCompile]
 public partial struct PlayerMovementSystem : ISystem
 {
-    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         var deltaTime = SystemAPI.Time.DeltaTime;
@@ -20,7 +18,6 @@ public partial struct PlayerMovementSystem : ISystem
         }
     }
     
-    [BurstCompile]
     private void ProcessPlayerMovement(RefRW<LocalTransform> transform, float speed, float width, float deltaTime)
     { 
         var input = Input.GetAxis("Horizontal");

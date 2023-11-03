@@ -4,11 +4,9 @@ using Unity.Entities;
 using Unity.Transforms;
 using Unity.Mathematics;
 
-[BurstCompile]
 [UpdateInGroup(typeof(LateSimulationSystemGroup))]
 public partial struct InvaderSpawnerSystem : ISystem
 {
-    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         foreach (RefRW<InvaderSpawner> invaderSpawner in SystemAPI.Query<RefRW<InvaderSpawner>>())
@@ -16,8 +14,7 @@ public partial struct InvaderSpawnerSystem : ISystem
             ProcessSpawner(ref state, invaderSpawner);
         }
     }
-
-    [BurstCompile]
+    
     private void ProcessSpawner(ref SystemState state, RefRW<InvaderSpawner> spawner)
     {
         if (spawner.ValueRO.NextSpawnTime > SystemAPI.Time.ElapsedTime) return;

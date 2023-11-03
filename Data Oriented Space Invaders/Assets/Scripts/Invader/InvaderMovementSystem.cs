@@ -3,18 +3,15 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-[BurstCompile]
 public partial struct InvaderMovementSystem : ISystem
 {
     private int _direction;
-
-    [BurstCompile]
+    
     public void OnCreate(ref SystemState state)
     {
         _direction = 1;
     }
-
-    [BurstCompile]
+    
     public void OnUpdate(ref SystemState state)
     {
         var deltaTime = SystemAPI.Time.DeltaTime;
@@ -32,7 +29,6 @@ public partial struct InvaderMovementSystem : ISystem
     /// When the horizontal position exceeds a certain value,
     /// reverse direction of all invaders.
     /// </summary>
-    [BurstCompile]
     private void UpdateInvadersDirection(RefRW<LocalTransform> transform, float width)
     {
         var directionChanged = false;
@@ -45,8 +41,7 @@ public partial struct InvaderMovementSystem : ISystem
             _direction = -1;
         }
     }
-
-    [BurstCompile]
+    
     private void ApplyInvaderMovement(RefRW<LocalTransform> transform, float speed, float deltaTime)
     {
         var direction = new float3(1f * _direction, 0f, 0f);

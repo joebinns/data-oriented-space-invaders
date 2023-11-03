@@ -2,11 +2,9 @@ using Unity.Entities;
 using Unity.Transforms;
 using Unity.Burst;
 
-[BurstCompile]
 [UpdateInGroup(typeof(LateSimulationSystemGroup))]
 public partial struct ProjectileSpawnerSystem : ISystem
 {
-    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         foreach (RefRW<ProjectileSpawner> projectileSpawner in SystemAPI.Query<RefRW<ProjectileSpawner>>())
@@ -14,8 +12,7 @@ public partial struct ProjectileSpawnerSystem : ISystem
             ProcessSpawner(ref state, projectileSpawner);
         }
     }
-
-    [BurstCompile]
+    
     private void ProcessSpawner(ref SystemState state, RefRW<ProjectileSpawner> spawner)
     {
         if (spawner.ValueRO.NextSpawnTime > SystemAPI.Time.ElapsedTime) return;

@@ -9,7 +9,7 @@ Being my first time working with Data Oriented Programming, this project came wi
 I decided to focus my learning on Unity's Entity Component System (ECS) and profiler.
 As such, I learnt to use unmanaged datatypes with distinguished entities, components and systems.
 With the Job System, I used Burst Compilation to optimise the performance of various systems: player movement, invader movement, projectile spawning and projectile movement.
-For greater consistency whilst profiling, I opted to spawn projectiles at a fixed frequency.
+For greater consistency whilst profiling, I opted to spawn projectiles in large numbers at a fixed frequency.
 
 - [x] Simple movement
 - [x] Shooting

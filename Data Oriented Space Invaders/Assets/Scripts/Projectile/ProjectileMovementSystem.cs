@@ -5,8 +5,10 @@ using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Transforms;
 
+[BurstCompile]
 public partial struct ProjectileMovementSystem : ISystem
 {
+    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         var entityCommandBuffer = new EntityCommandBuffer(Allocator.Temp);
@@ -29,6 +31,7 @@ public partial struct ProjectileMovementSystem : ISystem
         entityCommandBuffer.Playback(state.EntityManager);
     }
     
+    [BurstCompile]
     private float ProcessProjectileMovement(RefRW<LocalTransform> transform, RefRW<Projectile> projectile, float deltaTime)
     {
         var deltaVerticalDisplacement = projectile.ValueRO.VerticalVelocity * deltaTime;

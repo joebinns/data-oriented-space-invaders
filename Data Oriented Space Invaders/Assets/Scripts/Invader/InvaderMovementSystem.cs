@@ -22,6 +22,7 @@ public partial struct InvaderMovementSystem : ISystem
                  SystemAPI.Query<RefRW<LocalTransform>,
                      RefRW<Invader>>())
         {
+            if (invader.ValueRO.StartTime > SystemAPI.Time.ElapsedTime) return;
             UpdateInvadersDirection(transform, invader.ValueRO.Width);
             ApplyInvaderMovement(transform, invader.ValueRO.Speed, deltaTime);
         }

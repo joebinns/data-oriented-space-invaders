@@ -121,6 +121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 5
   Width: 20
+  StartTime: 3
 --- !u!114 &2905876568142133549
 MonoBehaviour:
   m_ObjectHideFlags: 0

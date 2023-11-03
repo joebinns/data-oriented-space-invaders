@@ -5,7 +5,7 @@ class InvaderSpawnerAuthoring : MonoBehaviour
 {
     public GameObject Prefab;
     public int Count = 6;
-    public float Spacing = 2f;
+    public float Spacing = 1.5f;
     public float Height = 10f;
     public float SpawnPeriod = 4f;
     public int Waves = 3;

@@ -5,6 +5,7 @@ class InvaderAuthoring : MonoBehaviour
 {
     public float Speed = 3f;
     public float Width = 20f;
+    public float StartTime = 3f;
 }
 
 class InvaderBaker : Baker<InvaderAuthoring>
@@ -15,7 +16,8 @@ class InvaderBaker : Baker<InvaderAuthoring>
         AddComponent(entity, new Invader
         {
             Speed = authoring.Speed,
-            Width = authoring.Width
+            Width = authoring.Width,
+            StartTime = authoring.StartTime
         });
     }
 }

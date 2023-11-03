@@ -25,7 +25,7 @@ public partial struct InvaderSpawnerSystem : ISystem
 
         // Spawn invaders with a vertical height and horizontal spacing
         var spawnHorizontal = (spawner.ValueRO.Spacing / 2f) * (1f - spawner.ValueRO.Count);
-        var spawnVertical = (spawner.ValueRO.Height + spawner.ValueRO.CurrentWave * spawner.ValueRO.Spacing);
+        var spawnVertical = (spawner.ValueRO.Height - spawner.ValueRO.CurrentWave * spawner.ValueRO.Spacing);
         for (var i = 0; i < spawner.ValueRO.Count; i++)
         {
             spawnHorizontal += spawner.ValueRO.Spacing;

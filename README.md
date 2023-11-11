@@ -1,4 +1,4 @@
-# Data Oriented Space Invader
+# Data Oriented Space Invaders
 An assignment made for Futuregames course "Computer Technology".
 
 ## Controls

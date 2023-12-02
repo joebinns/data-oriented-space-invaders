@@ -13,7 +13,6 @@ public readonly partial struct InvaderSpawnerAspect : IAspect
 	public float SpawnPeriod => _invaderSpawner.ValueRO.SpawnPeriod;
 	public Entity Prefab => _invaderSpawner.ValueRO.Prefab;
 
-
 	public float NextSpawnTime
 	{
 		get => _invaderSpawner.ValueRO.NextSpawnTime;

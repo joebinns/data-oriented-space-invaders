@@ -14,13 +14,18 @@ public partial struct InvaderSpawnerSystem : ISystem
 	[BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
+		var invadersQuery = state.GetEntityQuery(typeof(Invader));
+		var numInvaders = invadersQuery.CalculateEntityCount();
+
 		state.CompleteDependency();
 
 		// Schedule invader spawner job
+		var shouldResetWaves = numInvaders == 0 ? true : false;
 		var elapsedTime = (float)SystemAPI.Time.ElapsedTime;
 		var entityCommandBufferSingleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();
 		new InvaderSpawnerJob()
 		{
+			ShouldResetWaves = shouldResetWaves,
 			ElapsedTime = elapsedTime,
 			EntityCommandBuffer = entityCommandBufferSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()
 		}.ScheduleParallel();

@@ -24,6 +24,7 @@ public partial struct CollisionSystem : ISystem
 				}
 			}
 		}
+
 		entityCommandBuffer.Playback(state.EntityManager);
 		entityCommandBuffer.Dispose();
 	}

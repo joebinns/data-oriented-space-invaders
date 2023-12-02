@@ -6,6 +6,7 @@ using Unity.Transforms;
 [BurstCompile]
 public partial struct InvaderSpawnerJob : IJobEntity
 {
+	public bool ShouldResetWaves;
 	public float ElapsedTime;
 	public EntityCommandBuffer.ParallelWriter EntityCommandBuffer;
 
@@ -13,6 +14,10 @@ public partial struct InvaderSpawnerJob : IJobEntity
 	private void Execute(InvaderSpawnerAspect spawnerAspect, [EntityIndexInQuery] int sortKey)
 	{
 		if (spawnerAspect.NextSpawnTime > ElapsedTime) return;
+		if (ShouldResetWaves)
+		{
+			spawnerAspect.CurrentWave = 0;
+		}
 		if (spawnerAspect.CurrentWave >= spawnerAspect.Waves) return;
 
 		// Spawn invaders with a vertical height and horizontal spacing

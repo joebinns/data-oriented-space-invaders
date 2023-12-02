@@ -3,6 +3,8 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
+// TODO: Switch query usabe for jobs
+
 [BurstCompile]
 public partial struct InvaderMovementSystem : ISystem
 {

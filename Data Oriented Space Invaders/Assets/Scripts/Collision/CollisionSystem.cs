@@ -10,20 +10,20 @@ public partial struct CollisionSystem : ISystem
 	public void OnUpdate(ref SystemState state)
 	{
 		var entityCommandBuffer = new EntityCommandBuffer(Allocator.Temp);
-		var playerSize = 1f;
-
-		foreach (var playerAspect in SystemAPI.Query<PlayerAspect>())
+		foreach (var invaderAspect in SystemAPI.Query<InvaderAspect>())
 		{
 			foreach (var projectileAspect in SystemAPI.Query<ProjectileAspect>())
 			{
-				var squareDistance = math.distancesq(playerAspect.Position, projectileAspect.Position);
-				if (squareDistance <= (playerSize * playerSize))
+				if (projectileAspect.VerticalVelocity < 0f) continue; // Invader projectiles should not collider with other invaders
+
+				var squareDistance = math.distancesq(invaderAspect.Position, projectileAspect.Position);
+				if (squareDistance <= (0.75f))
 				{
 					entityCommandBuffer.DestroyEntity(projectileAspect.Entity);
+					entityCommandBuffer.DestroyEntity(invaderAspect.Entity);
 				}
 			}
 		}
-
 		entityCommandBuffer.Playback(state.EntityManager);
 		entityCommandBuffer.Dispose();
 	}

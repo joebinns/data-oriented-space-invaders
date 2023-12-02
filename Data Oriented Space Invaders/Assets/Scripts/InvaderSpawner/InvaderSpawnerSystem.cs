@@ -12,7 +12,7 @@ public partial struct InvaderSpawnerSystem : ISystem
 	{
 		state.RequireForUpdate<BeginInitializationEntityCommandBufferSystem.Singleton>();
 
-		_invadersQuery = state.GetEntityQuery(typeof(Invader));
+		_invadersQuery = state.GetEntityQuery(ComponentType.ReadWrite<Invader>());
 	}
 
 	[BurstCompile]

@@ -121,7 +121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 5
   Width: 20
-  StartTime: 10
+  StartTime: 3
 --- !u!114 &2905876568142133549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,4 +135,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 4259504464743242846, guid: fbcfaadf6620db647b67a566abafc279, type: 3}
+  SpawnTransform: {fileID: 7540544903746188625}
   SpawnPeriod: 0.2

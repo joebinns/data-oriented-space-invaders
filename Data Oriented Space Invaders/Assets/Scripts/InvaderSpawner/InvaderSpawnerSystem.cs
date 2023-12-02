@@ -5,21 +5,23 @@ using Unity.Entities;
 [UpdateInGroup(typeof(LateSimulationSystemGroup))]
 public partial struct InvaderSpawnerSystem : ISystem
 {
+	private EntityQuery _invadersQuery;
+
 	[BurstCompile]
 	public void OnCreate(ref SystemState state)
 	{
 		state.RequireForUpdate<BeginInitializationEntityCommandBufferSystem.Singleton>();
+
+		_invadersQuery = state.GetEntityQuery(typeof(Invader));
 	}
 
 	[BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-		var invadersQuery = state.GetEntityQuery(typeof(Invader));
-		var numInvaders = invadersQuery.CalculateEntityCount();
-
 		state.CompleteDependency();
 
 		// Schedule invader spawner job
+		var numInvaders = _invadersQuery.CalculateEntityCount();
 		var shouldResetWaves = numInvaders == 0;
 		var deltaTime = SystemAPI.Time.DeltaTime;
 		var elapsedTime = (float)SystemAPI.Time.ElapsedTime;

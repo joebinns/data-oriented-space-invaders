@@ -7,6 +7,7 @@ public readonly partial struct PlayerAspect : IAspect
 	public readonly Entity Entity;
 
 	private readonly RefRW<Player> _player;
+	private readonly RefRW<PlayerShooting> _shooting;
 	private readonly RefRW<LocalTransform> _transform;
 
 	public float Speed => _player.ValueRO.Speed;

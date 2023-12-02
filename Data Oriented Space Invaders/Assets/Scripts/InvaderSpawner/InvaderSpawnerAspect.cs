@@ -25,5 +25,4 @@ public readonly partial struct InvaderSpawnerAspect : IAspect
 		get => _invaderSpawner.ValueRO.CurrentWave;
 		set => _invaderSpawner.ValueRW.CurrentWave = value;
 	}
-
 }

@@ -15,7 +15,7 @@ For greater consistency whilst profiling, I opted to spawn projectiles in large 
 - [x] Shooting
 - [x] Waves of enemies
 
-## Feedback
+## Improvements
 Having received the feedback that my code may not be structured in a way that takes advantage of ECS, I took a better look into best practices.
 Namely, I learnt that I had carried over some bad habits from Object Oriented Programming, such as the use of queries to facilitate for loops which may not be taken advantage of by multithreading.
 To ammend this, I replaced the usage of queries and for loops with Jobs in a selection of some of the least performant systems:

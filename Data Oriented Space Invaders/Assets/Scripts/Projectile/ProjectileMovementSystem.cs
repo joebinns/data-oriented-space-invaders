@@ -1,41 +1,27 @@
-using System;
 using Unity.Entities;
 using Unity.Burst;
-using Unity.Collections;
-using Unity.Mathematics;
-using Unity.Transforms;
 
 [BurstCompile]
 public partial struct ProjectileMovementSystem : ISystem
 {
-    [BurstCompile]
+	[BurstCompile]
+	public void OnCreate(ref SystemState state)
+	{
+		state.RequireForUpdate<BeginInitializationEntityCommandBufferSystem.Singleton>();
+	}
+
+	[BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        var entityCommandBuffer = new EntityCommandBuffer(Allocator.Temp);
-        
-        var deltaTime = SystemAPI.Time.DeltaTime;
-        foreach (var (transform, projectile, entity) in
-                 SystemAPI.Query<RefRW<LocalTransform>,
-                     RefRW<Projectile>>().WithEntityAccess())
-        {
-            var deltaVerticalDisplacement = ProcessProjectileMovement(transform, projectile, deltaTime);
+		state.CompleteDependency();
 
-            // Destroy entities that have left the arena
-            projectile.ValueRW.DistanceTravelled += Math.Abs(deltaVerticalDisplacement);
-            if (projectile.ValueRO.DistanceTravelled > projectile.ValueRO.DestroyAtDistance)
-            {
-                entityCommandBuffer.DestroyEntity(entity);
-            }
-        }
-        
-        entityCommandBuffer.Playback(state.EntityManager);
-    }
-    
-    [BurstCompile]
-    private float ProcessProjectileMovement(RefRW<LocalTransform> transform, RefRW<Projectile> projectile, float deltaTime)
-    {
-        var deltaVerticalDisplacement = projectile.ValueRO.VerticalVelocity * deltaTime;
-        transform.ValueRW.Position += deltaVerticalDisplacement * new float3(0f, 1f, 0f);
-        return deltaVerticalDisplacement;
+		// Schedule projectile movement job
+        var deltaTime = SystemAPI.Time.DeltaTime;
+		var entityCommandBufferSingleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();
+		new ProjectileMovementJob()
+		{
+			DeltaTime = deltaTime,
+			EntityCommandBuffer = entityCommandBufferSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()
+		}.ScheduleParallel();
     }
 }

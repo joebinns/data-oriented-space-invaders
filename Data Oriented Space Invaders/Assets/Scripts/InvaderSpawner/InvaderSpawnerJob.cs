@@ -10,24 +10,24 @@ public partial struct InvaderSpawnerJob : IJobEntity
 	public EntityCommandBuffer.ParallelWriter EntityCommandBuffer;
 
 	[BurstCompile]
-	private void Execute(InvaderSpawner spawner, [EntityIndexInQuery] int sortKey)
+	private void Execute(InvaderSpawnerAspect spawnerAspect, [EntityIndexInQuery] int sortKey)
 	{
-		if (spawner.NextSpawnTime > ElapsedTime) return;
-		if (spawner.CurrentWave >= spawner.Waves) return;
+		if (spawnerAspect.NextSpawnTime > ElapsedTime) return;
+		if (spawnerAspect.CurrentWave >= spawnerAspect.Waves) return;
 
 		// Spawn invaders with a vertical height and horizontal spacing
-		var spawnHorizontal = (spawner.Spacing / 2f) * (1f - spawner.Count);
-		var spawnVertical = (spawner.Height - spawner.CurrentWave * spawner.Spacing);
-		for (var i = 0; i < spawner.Count; i++)
+		var spawnHorizontal = (spawnerAspect.Spacing / 2f) * (1f - spawnerAspect.Count);
+		var spawnVertical = (spawnerAspect.Height - spawnerAspect.CurrentWave * spawnerAspect.Spacing);
+		for (var i = 0; i < spawnerAspect.Count; i++)
 		{
-			spawnHorizontal += spawner.Spacing;
-			var invader = EntityCommandBuffer.Instantiate(sortKey, spawner.Prefab);
+			spawnHorizontal += spawnerAspect.Spacing;
+			var invader = EntityCommandBuffer.Instantiate(sortKey, spawnerAspect.Prefab);
 			var invaderTransform = LocalTransform.FromPosition(new float3(spawnHorizontal, spawnVertical, 0f));
 			EntityCommandBuffer.SetComponent(sortKey, invader, invaderTransform);
 		}
 
 		// Reset the next spawn time and update the number of remaining waves
-		spawner.NextSpawnTime = ElapsedTime + spawner.SpawnPeriod;
-		spawner.CurrentWave++;
+		spawnerAspect.NextSpawnTime = ElapsedTime + spawnerAspect.SpawnPeriod;
+		spawnerAspect.CurrentWave++;
 	}
 }

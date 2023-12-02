@@ -6,6 +6,7 @@ using Unity.Transforms;
 [BurstCompile]
 public partial struct InvaderSpawnerJob : IJobEntity
 {
+	public float DeltaTime;
 	public bool ShouldResetWaves;
 	public float ElapsedTime;
 	public EntityCommandBuffer.ParallelWriter EntityCommandBuffer;
@@ -14,9 +15,10 @@ public partial struct InvaderSpawnerJob : IJobEntity
 	private void Execute(InvaderSpawnerAspect spawnerAspect, [EntityIndexInQuery] int sortKey)
 	{
 		if (spawnerAspect.NextSpawnTime > ElapsedTime) return;
-		if (ShouldResetWaves)
+		if (ShouldResetWaves && ElapsedTime > spawnerAspect.SpawnPeriod)
 		{
 			spawnerAspect.CurrentWave = 0;
+			spawnerAspect.SpawnPeriod = DeltaTime;
 		}
 		if (spawnerAspect.CurrentWave >= spawnerAspect.Waves) return;
 

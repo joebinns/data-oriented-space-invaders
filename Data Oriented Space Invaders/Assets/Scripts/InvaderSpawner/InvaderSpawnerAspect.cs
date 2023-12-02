@@ -10,7 +10,6 @@ public readonly partial struct InvaderSpawnerAspect : IAspect
 	public int Count => _invaderSpawner.ValueRO.Count;
 	public float Spacing => _invaderSpawner.ValueRO.Spacing;
 	public float Height => _invaderSpawner.ValueRO.Height;
-	public float SpawnPeriod => _invaderSpawner.ValueRO.SpawnPeriod;
 	public Entity Prefab => _invaderSpawner.ValueRO.Prefab;
 
 	public float NextSpawnTime
@@ -23,5 +22,11 @@ public readonly partial struct InvaderSpawnerAspect : IAspect
 	{
 		get => _invaderSpawner.ValueRO.CurrentWave;
 		set => _invaderSpawner.ValueRW.CurrentWave = value;
+	}
+
+	public float SpawnPeriod
+	{
+		get => _invaderSpawner.ValueRO.SpawnPeriod;
+		set => _invaderSpawner.ValueRW.SpawnPeriod = value;
 	}
 }

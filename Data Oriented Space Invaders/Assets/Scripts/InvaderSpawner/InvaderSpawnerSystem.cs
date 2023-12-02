@@ -20,11 +20,13 @@ public partial struct InvaderSpawnerSystem : ISystem
 		state.CompleteDependency();
 
 		// Schedule invader spawner job
-		var shouldResetWaves = numInvaders == 0 ? true : false;
+		var shouldResetWaves = numInvaders == 0;
+		var deltaTime = SystemAPI.Time.DeltaTime;
 		var elapsedTime = (float)SystemAPI.Time.ElapsedTime;
 		var entityCommandBufferSingleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();
 		new InvaderSpawnerJob()
 		{
+			DeltaTime = deltaTime,
 			ShouldResetWaves = shouldResetWaves,
 			ElapsedTime = elapsedTime,
 			EntityCommandBuffer = entityCommandBufferSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()

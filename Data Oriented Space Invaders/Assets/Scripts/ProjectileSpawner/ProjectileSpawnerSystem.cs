@@ -1,33 +1,28 @@
 using Unity.Entities;
-using Unity.Transforms;
 using Unity.Burst;
 
 [BurstCompile]
 [UpdateInGroup(typeof(LateSimulationSystemGroup))]
 public partial struct ProjectileSpawnerSystem : ISystem
 {
-    [BurstCompile]
+	[BurstCompile]
+	public void OnCreate(ref SystemState state)
+	{
+		state.RequireForUpdate<BeginInitializationEntityCommandBufferSystem.Singleton>();
+	}
+
+	[BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        foreach (RefRW<ProjectileSpawner> projectileSpawner in SystemAPI.Query<RefRW<ProjectileSpawner>>())
-        {
-            ProcessSpawner(ref state, projectileSpawner);
-        }
-    }
+		state.CompleteDependency();
 
-    [BurstCompile]
-    private void ProcessSpawner(ref SystemState state, RefRW<ProjectileSpawner> spawner)
-    {
-        if (spawner.ValueRO.NextSpawnTime > SystemAPI.Time.ElapsedTime) return;
-
-        // Spawn projectile
-        Entity projectile = state.EntityManager.Instantiate(spawner.ValueRO.Prefab);
-        state.EntityManager.SetComponentData(projectile, LocalTransform.FromPosition
-        (
-            SystemAPI.GetComponent<LocalTransform>(spawner.ValueRO.SpawnTransform).Position
-        ));
-        
-        // Reset the next spawn time
-        spawner.ValueRW.NextSpawnTime = (float)SystemAPI.Time.ElapsedTime + spawner.ValueRO.SpawnPeriod;
+		// Schedule invader spawner job
+		var elapsedTime = (float)SystemAPI.Time.ElapsedTime;
+		var entityCommandBufferSingleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();
+		new ProjectileSpawnerJob()
+		{
+			ElapsedTime = elapsedTime,
+			EntityCommandBuffer = entityCommandBufferSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()
+		}.ScheduleParallel();
     }
 }

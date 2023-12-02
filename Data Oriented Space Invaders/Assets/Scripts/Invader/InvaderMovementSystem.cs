@@ -3,6 +3,8 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
+// TODO: Switch query usabe for jobs
+
 [BurstCompile]
 public partial struct InvaderMovementSystem : ISystem
 {
@@ -35,7 +37,6 @@ public partial struct InvaderMovementSystem : ISystem
     [BurstCompile]
     private void UpdateInvadersDirection(RefRW<LocalTransform> transform, float width)
     {
-        var directionChanged = false;
         if (transform.ValueRO.Position.x <= -width/2f)
         {
             _direction = 1;

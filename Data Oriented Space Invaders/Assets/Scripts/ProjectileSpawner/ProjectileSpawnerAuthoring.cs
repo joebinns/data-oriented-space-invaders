@@ -4,7 +4,6 @@ using Unity.Entities;
 class ProjectileSpawnerAuthoring : MonoBehaviour
 {
     public GameObject Prefab;
-    public Transform SpawnTransform;
     public float SpawnPeriod = 0.5f;
 }
 
@@ -16,7 +15,6 @@ class SpawnerBaker : Baker<ProjectileSpawnerAuthoring>
         AddComponent(entity, new ProjectileSpawner
         {
             Prefab = GetEntity(authoring.Prefab, TransformUsageFlags.Dynamic),
-            SpawnTransform = GetEntity(authoring.SpawnTransform, TransformUsageFlags.Dynamic),
             NextSpawnTime = 0.0f,
             SpawnPeriod = authoring.SpawnPeriod
         });

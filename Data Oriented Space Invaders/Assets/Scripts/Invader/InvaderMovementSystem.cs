@@ -35,7 +35,6 @@ public partial struct InvaderMovementSystem : ISystem
     [BurstCompile]
     private void UpdateInvadersDirection(RefRW<LocalTransform> transform, float width)
     {
-        var directionChanged = false;
         if (transform.ValueRO.Position.x <= -width/2f)
         {
             _direction = 1;

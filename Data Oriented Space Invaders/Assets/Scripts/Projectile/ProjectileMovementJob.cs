@@ -1,7 +1,6 @@
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
-using UnityEngine;
 
 [BurstCompile]
 public partial struct ProjectileMovementJob : IJobEntity
@@ -17,7 +16,7 @@ public partial struct ProjectileMovementJob : IJobEntity
 		projectileAspect.Position += deltaVerticalDisplacement * new float3(0f, 1f, 0f);
 
 		// Destroy entities that have left the arena
-		projectileAspect.DistanceTravelled += Mathf.Abs(deltaVerticalDisplacement);
+		projectileAspect.DistanceTravelled += math.abs(deltaVerticalDisplacement);
 		if (projectileAspect.DistanceTravelled > projectileAspect.DestroyAtDistance)
 		{
 			EntityCommandBuffer.DestroyEntity(sortKey, projectileAspect.Entity);

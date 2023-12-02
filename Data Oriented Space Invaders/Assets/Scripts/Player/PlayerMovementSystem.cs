@@ -1,7 +1,5 @@
 using Unity.Entities;
 using Unity.Burst;
-using Unity.Mathematics;
-using Unity.Transforms;
 using UnityEngine;
 
 [BurstCompile]
